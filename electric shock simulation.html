@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prevent Electric Shock by Earth Wire - HK F.2 Science</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes flow {
+            to { stroke-dashoffset: -20; }
+        }
+        .current-flow {
+            stroke-dasharray: 8;
+            animation: flow 1s linear infinite;
+        }
+        .fault-flash {
+            animation: flash 0.4s ease-in-out infinite alternate;
+        }
+        @keyframes flash {
+            from { filter: drop-shadow(0 0 2px #ef4444); }
+            to { filter: drop-shadow(0 0 15px #ef4444); }
+        }
+        .shock-shake {
+            animation: shake 0.08s linear infinite;
+        }
+        .fuse-shake {
+            animation: heavy-shake 0.3s ease-out;
+        }
+        @keyframes heavy-shake {
+            0%, 100% { transform: translate(0, 0); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-4px, -2px); }
+            20%, 40%, 60%, 80% { transform: translate(4px, 2px); }
+        }
+        @keyframes shake {
+            0% { transform: translate(418px, 200px); }
+            25% { transform: translate(422px, 198px); }
+            50% { transform: translate(419px, 202px); }
+            75% { transform: translate(421px, 201px); }
+            100% { transform: translate(420px, 200px); }
+        }
+        .anime-eye-blink {
+            animation: blink 4s infinite;
+        }
+        @keyframes blink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+
+        @keyframes fuse-pop {
+            0% { transform: scale(1); filter: brightness(1); }
+            20% { transform: scale(1.4); filter: brightness(3) drop-shadow(0 0 10px white); }
+            40% { transform: scale(1.1); filter: brightness(2) drop-shadow(0 0 20px yellow); }
+            100% { transform: scale(1); filter: grayscale(1) brightness(0.5); }
+        }
+        .fuse-blown-body {
+            animation: fuse-pop 0.6s forwards ease-out;
+        }
+        
+        @keyframes smoke-float {
+            0% { transform: translateY(0) scale(1); opacity: 0.8; }
+            100% { transform: translateY(-30px) scale(2); opacity: 0; }
+        }
+        .smoke-particle {
+            animation: smoke-float 1.5s forwards ease-out;
+            fill: #94a3b8;
+        }
+
+        @keyframes boom-emoji {
+            0% { transform: scale(0); opacity: 0; }
+            20% { transform: scale(2.5); opacity: 1; }
+            80% { transform: scale(2.2); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+        .explosion-active {
+            animation: boom-emoji 0.8s forwards ease-out;
+        }
+    </style>
+</head>
+<body class="bg-indigo-50 font-sans text-slate-800">
+
+    <div class="max-w-5xl mx-auto p-4 md:p-8">
+        <header class="text-center mb-6">
+            <h1 class="text-4xl font-black text-indigo-900 mb-2 italic tracking-tighter uppercase">Prevent Electric Shock by Earth Wire</h1>
+            <p class="text-indigo-600 font-bold tracking-widest uppercase text-xs">HK Science F.2 Simulation • ⚡ アース線</p>
+        </header>
+
+        <div class="bg-white rounded-3xl shadow-2xl p-2 border-b-8 border-indigo-200 overflow-hidden">
+            <div id="simContainer" class="grid grid-cols-1 lg:grid-cols-4 gap-4 p-4">
+                
+                <div class="lg:col-span-1 space-y-4">
+                    <div class="bg-slate-900 p-5 rounded-2xl text-white shadow-xl">
+                        <h2 class="font-black text-indigo-400 mb-4 flex items-center gap-2 italic uppercase">Mission Select</h2>
+                        <div class="space-y-4">
+                            <div class="flex flex-col gap-2">
+                                <span class="text-xs font-bold text-slate-400 uppercase">Power Switch</span>
+                                <label class="flex items-center justify-between p-3 bg-slate-800 rounded-xl cursor-pointer hover:bg-slate-700 transition-colors">
+                                    <span class="text-sm font-bold">Socket Power</span>
+                                    <input type="checkbox" id="powerToggle" class="sr-only peer" checked>
+                                    <div class="relative w-12 h-6 bg-slate-600 rounded-full peer peer-checked:bg-blue-500 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-6"></div>
+                                </label>
+                            </div>
+                            <div class="flex flex-col gap-2 border-t border-slate-700 pt-4">
+                                <span class="text-xs font-bold text-slate-400 uppercase">1. Create a Fault</span>
+                                <label class="flex items-center justify-between p-3 bg-slate-800 rounded-xl cursor-pointer hover:bg-slate-700 transition-colors">
+                                    <span class="text-sm font-bold">Broken Live wire</span>
+                                    <input type="checkbox" id="faultToggle" class="sr-only peer">
+                                    <div class="relative w-12 h-6 bg-slate-600 rounded-full peer peer-checked:bg-red-500 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-6"></div>
+                                </label>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <span class="text-xs font-bold text-slate-400 uppercase">2. Install Safety</span>
+                                <label class="flex items-center justify-between p-3 bg-slate-800 rounded-xl cursor-pointer hover:bg-slate-700 transition-colors">
+                                    <span class="text-sm font-bold">Earth Wire (E)</span>
+                                    <input type="checkbox" id="earthToggle" class="sr-only peer">
+                                    <div class="relative w-12 h-6 bg-slate-600 rounded-full peer peer-checked:bg-green-500 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-6"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border-2 border-indigo-100">
+                        <h2 class="font-black text-indigo-900 mb-4 italic uppercase">Execute</h2>
+                        <button id="touchBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-xl shadow-lg active:scale-95 disabled:opacity-50 transition-all uppercase">
+                            Touch Machine
+                        </button>
+                        <button id="resetBtn" class="w-full mt-4 py-2 text-xs font-bold text-slate-400 hover:text-red-500 uppercase">
+                            Reset Sequence
+                        </button>
+                    </div>
+
+                    <div id="statusBox" class="p-4 rounded-xl border-4 text-xs font-black text-center uppercase tracking-tighter">
+                        Standby Mode
+                    </div>
+                </div>
+
+                <div class="lg:col-span-3 relative bg-slate-100 rounded-2xl overflow-hidden min-h-[500px] border-4 border-slate-200">
+                    <svg viewBox="0 0 500 400" class="w-full h-full" id="simSvg">
+                        <rect x="0" y="340" width="500" height="60" fill="#cbd5e1" />
+                        
+                        <rect x="20" y="140" width="80" height="130" rx="4" fill="#fff" stroke="#94a3b8" stroke-width="2" />
+                        <rect id="socketSwitch" x="35" y="148" width="15" height="20" fill="#ef4444" stroke="#333" stroke-width="1" />
+                        
+                        <g font-size="8" font-weight="bold">
+                            <circle cx="60" cy="185" r="5" fill="#333" /> 
+                            <text x="50" y="188" fill="#475569">E</text>
+                            <circle cx="45" cy="225" r="5" fill="#333" /> 
+                            <text x="35" y="228" fill="#475569">N</text>
+                            <circle cx="75" cy="225" r="5" fill="#333" /> 
+                            <text x="82" y="228" fill="#475569">L</text>
+                        </g>
+
+                        <g id="fuseGroup">
+                            <rect id="fuseL" x="85" y="220" width="10" height="10" rx="1" fill="#ef4444" />
+                            <rect id="fuseR" x="95" y="220" width="10" height="10" rx="1" fill="#ef4444" />
+                            <line id="fuseWire" x1="87" y1="225" x2="103" y2="225" stroke="#fff" stroke-width="1" />
+                            <text x="83" y="216" font-size="7" font-weight="black">FUSE</text>
+                            <text id="boomEmoji" x="95" y="235" font-size="12" text-anchor="middle" class="opacity-0 pointer-events-none">💥</text>
+                        </g>
+
+                        <g id="smokeGroup"></g>
+
+                        <path id="pathEarth" d="M 60 185 L 140 185 L 140 280 L 220 280" fill="none" stroke="#22c55e" stroke-width="4" stroke-dasharray="6,3" class="opacity-10" />
+                        <path id="wireLive" d="M 75 225 L 85 225 M 105 225 L 150 225 L 150 245 L 250 245" fill="none" stroke="#ef4444" stroke-width="3" />
+                        <path id="wireNeutral" d="M 45 225 L 45 255 L 165 255 L 165 215 L 250 215" fill="none" stroke="#3b82f6" stroke-width="3" />
+                        
+                        <g id="machineGroup">
+                            <rect x="220" y="120" width="140" height="200" rx="10" fill="#fff" stroke="#6366f1" stroke-width="5" id="machineBody" />
+                            <circle cx="290" cy="220" r="45" fill="#f8fafc" stroke="#6366f1" stroke-width="3" />
+                            <text x="250" y="145" font-family="monospace" font-weight="black" font-size="10" fill="#6366f1">SUPER WASH</text>
+                        </g>
+
+                        <g id="normalFlowGroup">
+                            <path d="M 75 225 L 150 225 L 150 245 L 250 245" fill="none" stroke="#fca5a5" stroke-width="6" class="current-flow" />
+                            <path d="M 250 215 L 165 215 L 165 255 L 45 255 L 45 225" fill="none" stroke="#93c5fd" stroke-width="6" class="current-flow" />
+                        </g>
+
+                        <g id="faultFlowEntry" class="hidden">
+                            <path d="M 75 225 L 150 225 L 150 245 L 250 245" fill="none" stroke="#ef4444" stroke-width="6" class="current-flow" />
+                            <path d="M 250 245 L 275 245 L 275 125" fill="none" stroke="#ef4444" stroke-width="6" class="current-flow" />
+                            <rect x="220" y="120" width="140" height="200" rx="10" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,2" class="animate-pulse" />
+                        </g>
+
+                        <path id="flowEarth_S1" d="M 275 120 L 220 280" fill="none" stroke="#fbbf24" stroke-width="10" class="current-flow hidden" />
+                        <path id="flowEarth_S2" d="M 220 280 L 140 280 L 140 185 L 60 185" fill="none" stroke="#fbbf24" stroke-width="10" class="current-flow hidden" />
+                        <path id="flowPerson" d="M 360 210 L 400 210 L 420 340" fill="none" stroke="#ef4444" stroke-width="10" class="current-flow hidden" />
+
+                        <g id="character" transform="translate(420, 200)">
+                            <path d="M -20 40 L 20 40 L 25 100 L -25 100 Z" fill="#fff" stroke="#1e293b" stroke-width="3" />
+                            <path d="M -20 40 L 20 40 L 10 55 L -10 55 Z" fill="#6366f1" />
+                            <rect x="-18" y="100" width="12" height="40" fill="#334155" />
+                            <rect x="6" y="100" width="12" height="40" fill="#334155" />
+                            <path id="armL" d="M -20 50 L -40 70" stroke="#1e293b" stroke-width="6" stroke-linecap="round" fill="none" />
+                            <path d="M 20 50 L 45 75" stroke="#1e293b" stroke-width="6" stroke-linecap="round" fill="none" />
+                            <g id="head">
+                                <path d="M -25 15 C -25 -20, 25 -20, 25 15 L 25 25 C 25 45, 0 55, -25 25 Z" fill="#ffedd5" stroke="#1e293b" stroke-width="3" />
+                                <g id="eyesNormal" class="anime-eye-blink">
+                                    <ellipse cx="-10" cy="15" rx="5" ry="8" fill="white" stroke="#1e293b" stroke-width="1"/>
+                                    <circle cx="-10" cy="15" r="3" fill="#1e293b"/>
+                                    <ellipse cx="10" cy="15" rx="5" ry="8" fill="white" stroke="#1e293b" stroke-width="1"/>
+                                    <circle cx="10" cy="15" r="3" fill="#1e293b"/>
+                                </g>
+                                <g id="eyesShock" class="hidden">
+                                    <text x="-15" y="20" font-size="20" font-weight="bold">X</text>
+                                    <text x="5" y="20" font-size="20" font-weight="bold">X</text>
+                                </g>
+                                <path id="hair" d="M -28 10 L -35 -10 L -20 0 L -15 -25 L 0 -5 L 15 -25 L 20 0 L 35 -10 L 28 10" fill="#4338ca" stroke="#1e293b" stroke-width="2" />
+                            </g>
+                            <g id="lightning" class="hidden text-yellow-400">
+                                <path d="M -50 -20 L -30 0 L -50 20" stroke="currentColor" fill="none" stroke-width="4" stroke-linejoin="round" />
+                                <path d="M 50 -20 L 30 0 L 50 20" stroke="currentColor" fill="none" stroke-width="4" stroke-linejoin="round" />
+                            </g>
+                        </g>
+                    </svg>
+
+                    <div id="stepOverlay" class="absolute bottom-4 left-4 right-4 bg-black/90 text-white p-6 rounded-2xl border border-white/20 hidden">
+                        <div class="flex items-center justify-between gap-4">
+                            <div class="flex-1">
+                                <span id="stepTitle" class="block text-indigo-400 text-xs font-black uppercase tracking-widest mb-1">Observation phase</span>
+                                <p id="stepText" class="text-sm font-bold leading-snug text-slate-100">Analyzing circuit state...</p>
+                            </div>
+                            <button id="nextStepBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2 rounded-xl font-black text-sm shadow-lg active:scale-95 transition-all flex items-center gap-2">
+                                NEXT STEP <span class="text-xl">→</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="fuseOverlay" class="absolute inset-0 bg-indigo-950/95 flex flex-col items-center justify-center text-white p-8 text-center hidden">
+                        <h3 class="text-5xl font-black mb-4 text-yellow-400 italic">SYSTEM SAVED! 🛡️</h3>
+                        <div class="space-y-4 max-w-md">
+                            <p class="text-lg">1. The <strong class="text-green-400">Earth Wire</strong> provided a super easy path for current.</p>
+                            <p class="text-lg">2. A <strong class="text-yellow-400">MASSIVE SURGE</strong> occurred.</p>
+                            <p class="text-lg">3. The <strong class="text-red-400">Fuse</strong> melted instantly to break the circuit.</p>
+                        </div>
+                        <button id="finalResetBtn" class="mt-8 bg-white text-indigo-950 px-8 py-3 rounded-full font-black hover:bg-yellow-400 transition-colors uppercase">Try Again</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-slate-900 text-slate-300 rounded-b-2xl">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <div>
+                        <span class="block text-indigo-400 font-black text-2xl uppercase">L - Live</span>
+                        <p class="text-[10px] uppercase">Brown wire (220V)</p>
+                    </div>
+                    <div>
+                        <span class="block text-blue-400 font-black text-2xl uppercase">N - Neutral</span>
+                        <p class="text-[10px] uppercase">Blue wire (0V)</p>
+                    </div>
+                    <div>
+                        <span class="block text-green-400 font-black text-2xl uppercase">E - Earth</span>
+                        <p class="text-[10px] uppercase">Yellow/Green wire (Safety)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const powerToggle = document.getElementById('powerToggle');
+        const faultToggle = document.getElementById('faultToggle');
+        const earthToggle = document.getElementById('earthToggle');
+        const touchBtn = document.getElementById('touchBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const finalResetBtn = document.getElementById('finalResetBtn');
+        const statusBox = document.getElementById('statusBox');
+        const socketSwitch = document.getElementById('socketSwitch');
+        const nextStepBtn = document.getElementById('nextStepBtn');
+        const simContainer = document.getElementById('simContainer');
+        
+        const pathEarth = document.getElementById('pathEarth');
+        const normalFlowGroup = document.getElementById('normalFlowGroup');
+        const faultFlowEntry = document.getElementById('faultFlowEntry');
+        const flowEarth_S1 = document.getElementById('flowEarth_S1');
+        const flowEarth_S2 = document.getElementById('flowEarth_S2');
+        const flowPerson = document.getElementById('flowPerson');
+        const machineBody = document.getElementById('machineBody');
+        
+        const fuseL = document.getElementById('fuseL');
+        const fuseR = document.getElementById('fuseR');
+        const fuseWire = document.getElementById('fuseWire');
+        const boomEmoji = document.getElementById('boomEmoji');
+        const smokeGroup = document.getElementById('smokeGroup');
+        
+        const fuseOverlay = document.getElementById('fuseOverlay');
+        const stepOverlay = document.getElementById('stepOverlay');
+        const stepText = document.getElementById('stepText');
+        const stepTitle = document.getElementById('stepTitle');
+        
+        const armL = document.getElementById('armL');
+        const eyesNormal = document.getElementById('eyesNormal');
+        const eyesShock = document.getElementById('eyesShock');
+        const lightning = document.getElementById('lightning');
+        const character = document.getElementById('character');
+        const hair = document.getElementById('hair');
+
+        let isFuseBlown = false;
+        let currentStep = 0;
+
+        function updateUI() {
+            if (isFuseBlown) {
+                // When fuse is blown, ensure ALL current visuals are hidden
+                faultFlowEntry.classList.add('hidden');
+                normalFlowGroup.classList.add('hidden');
+                flowEarth_S1.classList.add('hidden');
+                flowEarth_S2.classList.add('hidden');
+                flowPerson.classList.add('hidden');
+                machineBody.classList.remove('fault-flash');
+                statusBox.textContent = "CIRCUIT BROKEN (FUSE)";
+                statusBox.style.borderColor = "#475569";
+                statusBox.style.color = "#475569";
+                return;
+            }
+
+            socketSwitch.setAttribute('fill', powerToggle.checked ? '#22c55e' : '#ef4444');
+            socketSwitch.setAttribute('transform', powerToggle.checked ? 'translate(0, 0)' : 'translate(0, 5)');
+            
+            pathEarth.style.opacity = earthToggle.checked ? "1" : "0.1";
+            
+            if (!powerToggle.checked) {
+                faultFlowEntry.classList.add('hidden');
+                normalFlowGroup.classList.add('hidden');
+                machineBody.classList.remove('fault-flash');
+                statusBox.textContent = "POWER OFF";
+                statusBox.style.borderColor = "#94a3b8";
+                statusBox.style.color = "#94a3b8";
+                return;
+            }
+
+            if (faultToggle.checked) {
+                faultFlowEntry.classList.remove('hidden');
+                normalFlowGroup.classList.add('hidden');
+                machineBody.classList.add('fault-flash');
+                statusBox.textContent = "⚠ LIVE CASE DETECTED";
+                statusBox.style.borderColor = "#ef4444";
+                statusBox.style.color = "#ef4444";
+            } else {
+                faultFlowEntry.classList.add('hidden');
+                normalFlowGroup.classList.remove('hidden');
+                machineBody.classList.remove('fault-flash');
+                statusBox.textContent = "SYSTEM STANDBY";
+                statusBox.style.borderColor = "#e2e8f0";
+                statusBox.style.color = "#94a3b8";
+            }
+        }
+
+        function createSmoke(x, y) {
+            for(let i=0; i<6; i++) {
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", x + (Math.random()*12 - 6));
+                circle.setAttribute("cy", y);
+                circle.setAttribute("r", 2 + Math.random()*5);
+                circle.classList.add("smoke-particle");
+                circle.style.animationDelay = (i * 0.1) + "s";
+                smokeGroup.appendChild(circle);
+                setTimeout(() => circle.remove(), 2000);
+            }
+        }
+
+        async function triggerInteractiveSafety() {
+            isFuseBlown = true;
+            touchBtn.disabled = true;
+            stepOverlay.classList.remove('hidden');
+            currentStep = 1;
+            runStep();
+        }
+
+        function runStep() {
+            switch(currentStep) {
+                case 1:
+                    stepTitle.textContent = "STEP 1: THE FAULT";
+                    stepText.textContent = "The broken Live wire touches the metal casing. The casing is now LIVE (220V)!";
+                    break;
+                case 2:
+                    stepTitle.textContent = "STEP 2: THE DRAIN";
+                    stepText.textContent = "Because the Earth wire is connected to the casing, it immediately starts draining the current to the ground.";
+                    flowEarth_S1.classList.remove('hidden');
+                    break;
+                case 3:
+                    stepTitle.textContent = "STEP 3: THE SURGE";
+                    stepText.textContent = "Since the Earth wire has very low resistance, a huge amount of current flows through the Live pin and the Fuse.";
+                    flowEarth_S2.classList.remove('hidden');
+                    break;
+                case 4:
+                    stepTitle.textContent = "STEP 4: ISOLATION";
+                    stepText.textContent = "BOOM! The massive surge melts the FUSE instantly. The circuit is now broken and the appliance is safe!";
+                    
+                    // Kill all current animations immediately
+                    faultFlowEntry.classList.add('hidden');
+                    flowEarth_S1.classList.add('hidden');
+                    flowEarth_S2.classList.add('hidden');
+                    machineBody.classList.remove('fault-flash');
+                    updateUI(); // Enforce "Broken" status
+
+                    // Explosion visual sequence
+                    simContainer.classList.add('fuse-shake');
+                    boomEmoji.classList.remove('opacity-0');
+                    boomEmoji.classList.add('explosion-active');
+                    
+                    fuseL.classList.add('fuse-blown-body');
+                    fuseR.classList.add('fuse-blown-body');
+                    fuseL.setAttribute('transform', 'translate(-3, -1) rotate(-15)');
+                    fuseR.setAttribute('transform', 'translate(3, 1) rotate(15)');
+                    fuseWire.style.opacity = "0";
+                    createSmoke(95, 225);
+                    
+                    setTimeout(() => simContainer.classList.remove('fuse-shake'), 400);
+                    
+                    nextStepBtn.textContent = "FINISH SEQUENCE";
+                    break;
+                case 5:
+                    stepOverlay.classList.add('hidden');
+                    fuseOverlay.classList.remove('hidden');
+                    break;
+            }
+        }
+
+        nextStepBtn.addEventListener('click', () => {
+            currentStep++;
+            runStep();
+        });
+
+        touchBtn.addEventListener('click', async () => {
+            if (isFuseBlown) return;
+            
+            armL.setAttribute('d', 'M -20 50 L -60 10'); 
+            await new Promise(r => setTimeout(r, 300));
+
+            if (powerToggle.checked && faultToggle.checked && !earthToggle.checked) {
+                character.classList.add('shock-shake');
+                eyesNormal.classList.add('hidden');
+                eyesShock.classList.remove('hidden');
+                lightning.classList.remove('hidden');
+                flowPerson.classList.remove('hidden');
+                hair.style.transform = "scale(1.5) translateY(-5px)";
+                hair.setAttribute('fill', '#fde047');
+                
+                statusBox.textContent = "⚡ CRITICAL SHOCK! ⚡";
+                statusBox.className = "p-4 rounded-xl border-4 text-xs font-black text-center uppercase bg-red-600 text-white animate-pulse";
+                
+                setTimeout(() => {
+                    character.classList.remove('shock-shake');
+                    eyesNormal.classList.remove('hidden');
+                    eyesShock.classList.add('hidden');
+                    lightning.classList.add('hidden');
+                    flowPerson.classList.add('hidden');
+                    hair.style.transform = "none";
+                    hair.setAttribute('fill', '#4338ca');
+                    armL.setAttribute('d', 'M -20 50 L -40 70');
+                    updateUI();
+                }, 2000);
+
+            } else if (powerToggle.checked && faultToggle.checked && earthToggle.checked) {
+                triggerInteractiveSafety();
+            } else {
+                statusBox.textContent = powerToggle.checked ? "SAFE - NO VOLTAGE" : "NO POWER TO SHOCK";
+                setTimeout(() => {
+                    armL.setAttribute('d', 'M -20 50 L -40 70');
+                }, 500);
+            }
+        });
+
+        const performReset = () => {
+            isFuseBlown = false;
+            currentStep = 0;
+            faultToggle.checked = false;
+            earthToggle.checked = false;
+            powerToggle.checked = true;
+            nextStepBtn.textContent = "NEXT STEP →";
+            statusBox.className = "p-4 rounded-xl border-4 text-xs font-black text-center uppercase tracking-tighter";
+            
+            fuseL.classList.remove('fuse-blown-body');
+            fuseR.classList.remove('fuse-blown-body');
+            fuseL.setAttribute('transform', '');
+            fuseR.setAttribute('transform', '');
+            fuseWire.style.opacity = "1";
+            boomEmoji.classList.add('opacity-0');
+            boomEmoji.classList.remove('explosion-active');
+            
+            fuseOverlay.classList.add('hidden');
+            flowEarth_S1.classList.add('hidden');
+            flowEarth_S2.classList.add('hidden');
+            flowPerson.classList.add('hidden');
+            faultFlowEntry.classList.add('hidden');
+            stepOverlay.classList.add('hidden');
+            touchBtn.disabled = false;
+            updateUI();
+        };
+
+        resetBtn.addEventListener('click', performReset);
+        finalResetBtn.addEventListener('click', performReset);
+
+        powerToggle.addEventListener('change', updateUI);
+        faultToggle.addEventListener('change', updateUI);
+        earthToggle.addEventListener('change', updateUI);
+
+        updateUI();
+    </script>
+</body>
+</html>
